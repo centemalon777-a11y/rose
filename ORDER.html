@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Place Order</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; background: #f0f0f5; margin: 0; padding: 0; }
+    .container { max-width: 500px; background: white; margin: 40px auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #2c3e50; }
+    label { font-weight: bold; display: block; margin-top: 15px; }
+    input, select, textarea, button {
+      width: 100%; padding: 10px; margin-top: 5px; font-size: 16px;
+      border: 1px solid #ccc; border-radius: 5px;
+    }
+    button { background: #27ae60; color: white; border: none; cursor: pointer; margin-top: 20px; }
+    button:hover { background: #1e8449; }
+    #message { margin-top: 15px; text-align: center; color: green; }
+    .admin { margin-top: 40px; }
+
+.order-item { background: #ecf0f1; padding: 10px; border-radius: 5px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<form action="https://formsubmit.co/centemalon777@gmail.com" method="POST">
+<div class="container">
+  <h2>Place Order</h2>
+
+  <label>Name</label>
+  <input type="text" id="name">
+
+  <label>Address</label>
+  <textarea id="address" rows="2"></textarea>
+
+  <label>Phone</label>
+  <input type="tel" id="phone">
+
+
+  <button onclick="placeOrder()">Place Order</button>
+  <div id="message"></div>
+
+  <button ><a href="PAYMENT.html">Pay Now</a></button>
+  <div class="admin">
+    <h2>📋 Order History</h2>
+    <div id="orders"></div>
+  </div>
+</div>
+</form>
+<script>
+  function placeOrder() {
+    const name = document.getElementById("name").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const quantity = document.getElementById("quantity").value;
+
+    if (!name || !address || !phone || !quantity) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const order = {
+      name,
+      address,
+      phone,
+      quantity,
+      date: new Date().toLocaleString()
+    };
+
+let orders = JSON.parse(localStorage.getItem("pureWaterOrders")) || [];
+    orders.push(order);
+    localStorage.setItem("pureWaterOrders", JSON.stringify(orders));
+
+    document.getElementById("message").innerText = `Thank you, ${name}. Your order for ${quantity} bags was placed.`;
+
+    document.getElementById("name").value = "";
+    document.getElementById("address").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("quantity").value = "";
+
+    showOrders();
+  }
+
+  function showOrders() {
+    const orders = JSON.parse(localStorage.getItem("pureWaterOrders")) || [];
+    const container = document.getElementById("orders");
+    container.innerHTML = "";
+
+    if (orders.length === 0) {
+      container.innerHTML = "<p>No orders yet.</p>";
+      return;
+    }
+
+    orders.forEach(order => {
+      const div = document.createElement("div");
+      div.className = "order-item";
+      div.innerHTML = `
+        <strong>order.name</strong><br>
+        Quantity:{order.quantity} bags<br>
+        Address: order.address<br>
+        Phone:{order.phone}<br>
+        <small>${order.date}</small>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  showOrders();
+</script>
+
+</body>
+</html>
